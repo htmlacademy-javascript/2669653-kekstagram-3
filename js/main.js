@@ -1,7 +1,6 @@
-import { PHOTO_COUNT } from './data.js';
-import { generatePhotos } from './generate.js';
-
+import { generatePhotos } from './data.js';
+import { renderPhotos } from './pictures.js';
+const PHOTO_COUNT = 25;
 const photos = generatePhotos(PHOTO_COUNT);
- 
+renderPhotos(photos);
 
-console.log(photos);

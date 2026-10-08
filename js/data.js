@@ -1,6 +1,6 @@
 // Модуль для констант и исходных значений массивов
 
-
+import { getRandomInteger, getRandomArrayElement } from './utils.js';
 
 //Массив имён
 const NAMES = [
@@ -53,9 +53,9 @@ const DESCRIPTIONS = [
   'Летящий самолёт',
   'Прогулка на катере',
   'Осенние ветра'
-]
+];
 
-const PHOTO_COUNT = 25;
+
 const MIN_COMMENTS = 0;
 const MAX_COMMENTS = 30;
 const MIN_LIKES = 15;
@@ -63,15 +63,59 @@ const MAX_LIKES = 200;
 const MIN_AVATAR_ID = 1;
 const MAX_AVATAR_ID = 6;
 
+// Счётчики
+let photoIdCounter = 0;
+let commentIdCounter = 0;
+
+//  Функция текста комментария (1 или 2 сообщения)
+function createMessage() {
+  const sentenceCount = getRandomInteger(1, 2);
+  const firstSentence = getRandomArrayElement(MESSAGES);
+
+  if (sentenceCount === 1) {
+    return firstSentence;
+  }
+
+  let secondSentence = getRandomArrayElement(MESSAGES);
+  while (secondSentence === firstSentence) {
+    secondSentence = getRandomArrayElement(MESSAGES);
+  }
+
+  return `${firstSentence} ${secondSentence}`;
+}
+
+// Функция одного комментария
+function createComment() {
+  return {
+    id: commentIdCounter++,
+    avatar: `img/avatar-${getRandomInteger(MIN_AVATAR_ID, MAX_AVATAR_ID)}.svg`,
+    message: createMessage(),
+    name: getRandomArrayElement(NAMES),
+  };
+}
+// Функция массива комментариев
+function createComments() {
+  const commentCount = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
+  return Array.from({ length: commentCount }, createComment);
+}
+
+// Функция создания фотографии
+function createPhoto() {
+  return {
+    id: photoIdCounter++,
+    url: `photos/${photoIdCounter}.jpg`,
+    description: getRandomArrayElement(DESCRIPTIONS),
+    likes: getRandomInteger(MIN_LIKES, MAX_LIKES),
+    comments: createComments(),
+  };
+}
+
+// Генерация массива фотографий
+function generatePhotos(count) {
+  return Array.from({ length: count }, createPhoto);
+}
+
+// Экспорт
 export {
-  NAMES,
-  MESSAGES,
-  DESCRIPTIONS,
-  PHOTO_COUNT,
-  MIN_COMMENTS,
-  MAX_COMMENTS,
-  MIN_LIKES,
-  MAX_LIKES,
-  MIN_AVATAR_ID,
-  MAX_AVATAR_ID
+  generatePhotos
 };
