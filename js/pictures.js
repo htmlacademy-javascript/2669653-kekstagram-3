@@ -1,5 +1,5 @@
-// Модель отрисовки фото
-
+// Модуль отрисовки фото
+import { openBigPicture } from './popup.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
@@ -13,6 +13,10 @@ const createPicture = function (photoGallery) {
   photoElement.querySelector('.picture__likes').textContent = photoGallery.likes;
   photoElement.querySelector('.picture__comments').textContent = photoGallery.comments.length;
 
+  photoElement.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    openBigPicture(photoGallery);
+  });
   return photoElement;
 
 };

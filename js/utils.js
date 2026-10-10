@@ -14,4 +14,10 @@ function getRandomArrayElement(elements) {
   return elements[getRandomInteger(0, elements.length - 1)];
 }
 
-export {getRandomInteger, getRandomArrayElement}
+// Функция проверки длины строки:
+function checkStringLength(string, maxLength) {
+  return string.length <= maxLength;
+}
+console.log(checkStringLength('Мой проект', 20));
+
+export {getRandomInteger, getRandomArrayElement};
