@@ -1,4 +1,4 @@
-// Модулья открытия и закрытия
+// Модуль открытия и закрытия
 
 // Создание переменных (поиск)
 const bigPicture = document.querySelector('.big-picture'); // поиск главного блока внутри документа
@@ -12,9 +12,12 @@ const commentShownCount = bigPicture.querySelector('.social__comment-shown-count
 const commentTotalCount = bigPicture.querySelector('.social__comment-total-count'); // общее число комментариев
 const pictureCloseButton = bigPicture.querySelector('.big-picture__cancel'); // кнопка закрытия
 const commentSample = socialComments.querySelector('.social__comment'); // образец комментария
+const COMMENTS_STEP = 5; // количество комментариев за один раз
+let shownCommentsCount = 0; // сколько комментариев уже показано в текущем окне
+let currentComments = []; // комментарии открытого фото
 
 
-// Создаёт один комментарий: клонирует образец и наполняет его данными
+// Функция создания одного комментария
 const createComment = (comment) => {
   const commentItem = commentSample.cloneNode(true);
   const commentAvatar = commentItem.querySelector('.social__picture');
@@ -27,10 +30,35 @@ const createComment = (comment) => {
   return commentItem;
 };
 
+//  Функция добавляет следующую порцию комментариев в список и обновляет счётчики
+const showNextComments = () => {
+  const nextComments = currentComments.slice(
+    shownCommentsCount,
+    shownCommentsCount + COMMENTS_STEP
+  );
+
+  const commentsFragment = document.createDocumentFragment();
+  nextComments.forEach((comment) => {
+    commentsFragment.append(createComment(comment));
+  });
+  socialComments.append(commentsFragment);
+
+  shownCommentsCount += nextComments.length;
+  commentShownCount.textContent = shownCommentsCount;
+
+  // Если показаны все комментарии, кнопку прячем
+  if (shownCommentsCount >= currentComments.length) {
+    loaderComments.classList.add('hidden');
+  }
+};
+
+
 // Полностью перерисовывает список комментариев
 const renderComments = (comments) => {
+  currentComments = comments;
+  shownCommentsCount = 0;
   socialComments.innerHTML = '';
-
+  showNextComments();
   const commentsFragment = document.createDocumentFragment();
   comments.forEach((comment) => {
     commentsFragment.append(createComment(comment));
@@ -48,8 +76,8 @@ const fillBigPicture = function (photo) {
   commentShownCount.textContent = photo.comments.length;
   commentTotalCount.textContent = photo.comments.length;
 
-  socialCommentsCount.classList.add('hidden');
-  loaderComments.classList.add('hidden');
+  socialCommentsCount.classList.remove('hidden');
+  loaderComments.classList.remove('hidden');
 
   renderComments(photo.comments);
 };
@@ -66,6 +94,7 @@ const onDocumentKeydown = (evt) => {
 // Открытие и закрытие
 
 const openBigPicture = function (photo) {
+  shownCommentsCount = 0; // сбрасываем счётчик для нового фото
   fillBigPicture(photo);
   bigPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -78,7 +107,9 @@ const closeBigPicture = function () {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-
+loaderComments.addEventListener('click', () => {
+  showNextComments();
+});
 // Кнопка крестика
 pictureCloseButton.addEventListener('click', () => {
   closeBigPicture();
