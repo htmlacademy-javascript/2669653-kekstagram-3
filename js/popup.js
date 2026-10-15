@@ -53,20 +53,6 @@ const showNextComments = () => {
 };
 
 
-// Полностью перерисовывает список комментариев
-const renderComments = (comments) => {
-  currentComments = comments;
-  shownCommentsCount = 0;
-  socialComments.innerHTML = '';
-  showNextComments();
-  const commentsFragment = document.createDocumentFragment();
-  comments.forEach((comment) => {
-    commentsFragment.append(createComment(comment));
-  });
-
-  socialComments.append(commentsFragment);
-};
-
 // Функция Заполняет окно данными конкретной фотографии
 const fillBigPicture = function (photo) {
   bigPictureImg.src = photo.url;
@@ -79,7 +65,10 @@ const fillBigPicture = function (photo) {
   socialCommentsCount.classList.remove('hidden');
   loaderComments.classList.remove('hidden');
 
-  renderComments(photo.comments);
+  socialComments.innerHTML = '';
+  currentComments = photo.comments;
+
+  showNextComments();
 };
 
 // Обработчик ESC
