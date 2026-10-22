@@ -4,7 +4,7 @@ const uploadForm = document.querySelector('.img-upload__form');
 
 
 // Функция разбивает строку на отдельные хэштеги по пробелам, пустые элементы отбрасываем
-const getHashtags = (value) => value.trim().split(/\s+/);
+const getHashtags = (value) => value.trim().split(/\s+/).filter(Boolean);
 
 //Хэштег начинается с символа # (решётка);
 

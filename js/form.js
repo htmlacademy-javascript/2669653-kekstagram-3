@@ -1,6 +1,8 @@
 import { resetScale } from './scale.js';
 import { resetEffects } from './slider.js';
 import { isTextFieldFocused, resetValidation } from './validation.js';
+import { sendPhoto } from './server.js';
+import { showSuccess, showSubmitError, isMessageShown } from './messages.js';
 
 // Поиск элементов и объявление переменных
 
@@ -8,6 +10,7 @@ const uploadInput = document.querySelector('.img-upload__input'); //выбор �
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadCancelButton = document.querySelector('.img-upload__cancel');
+const uploadSubmitButton = document.querySelector('.img-upload__submit');
 
 // Функция открытия формы
 
@@ -40,7 +43,8 @@ const closeUploadForm = () => {
 };
 
 // Кнопка «Закрыть»
-uploadCancelButton.addEventListener('click', () => {
+uploadCancelButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
   closeUploadForm();
 });
 
@@ -57,6 +61,10 @@ document.addEventListener('keydown', (evt) => {
     return;
   }
 
+  if (isMessageShown()) {
+    return;
+  }
+
   closeUploadForm();
 });
 
@@ -65,4 +73,36 @@ uploadForm.addEventListener('reset', () => {
   resetScale();
   resetEffects();
   resetValidation();
+});
+
+//Блокировка кнопки на время запроса
+
+const blockSubmitButton = () => {
+  uploadSubmitButton.disabled = true;
+};
+
+const unblockSubmitButton = () => {
+  uploadSubmitButton.disabled = false;
+};
+
+///  Отправка формы
+uploadForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  const formData = new FormData(uploadForm);
+
+  blockSubmitButton();
+
+  sendPhoto(formData)
+
+    .then(() => {
+      closeUploadForm();
+      showSuccess();
+    })
+
+    .catch(() => {
+      showSubmitError();
+    })
+
+    .finally(unblockSubmitButton);
 });

@@ -71,9 +71,8 @@ const fillBigPicture = function (photo) {
   showNextComments();
 };
 
+
 // Обработчик ESC
-
-
 const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape') {
     closeBigPicture();
@@ -96,6 +95,7 @@ const closeBigPicture = function () {
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 
+
 loaderComments.addEventListener('click', () => {
   showNextComments();
 });
@@ -103,5 +103,6 @@ loaderComments.addEventListener('click', () => {
 pictureCloseButton.addEventListener('click', () => {
   closeBigPicture();
 });
+
 
 export { openBigPicture };
