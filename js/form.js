@@ -6,11 +6,16 @@ import { showSuccess, showSubmitError, isMessageShown } from './messages.js';
 
 // Поиск элементов и объявление переменных
 
+const DEFAULT_PREVIEW_SRC = 'img/upload-default-image.jpg';
 const uploadInput = document.querySelector('.img-upload__input'); //выбор файла,  change открывает форму
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadCancelButton = document.querySelector('.img-upload__cancel');
 const uploadSubmitButton = document.querySelector('.img-upload__submit');
+const uploadPreviewImage = document.querySelector('.img-upload__preview img');// находим превью
+const effectPreviews = document.querySelectorAll('.effects__preview');
+
+let previewUrl = null;
 
 // Функция открытия формы
 
@@ -18,6 +23,31 @@ const openUploadForm = () => {
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
 };
+
+const showPreview = (file) => {
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+  }
+  previewUrl = URL.createObjectURL(file);
+
+  uploadPreviewImage.src = previewUrl;
+  effectPreviews.forEach((preview) => {
+    preview.style.backgroundImage = `url(${previewUrl})`;
+  });
+};
+
+//  возвращаем превью к изображению по умолчанию
+const resetPreview = () => {
+  if (previewUrl) {
+    URL.revokeObjectURL(previewUrl);
+    previewUrl = null;
+  }
+  uploadPreviewImage.src = DEFAULT_PREVIEW_SRC;
+  effectPreviews.forEach((preview) => {
+    preview.style.backgroundImage = '';
+  });
+};
+
 
 //Обработчик выбора файла
 
@@ -29,7 +59,7 @@ uploadInput.addEventListener('change', () => {
     uploadInput.value = '';
     return;
   }
-
+  showPreview(file);
   openUploadForm();
 });
 
@@ -70,6 +100,7 @@ document.addEventListener('keydown', (evt) => {
 
 // Сброс формы: все три части возвращаются в исходное состояние
 uploadForm.addEventListener('reset', () => {
+  resetPreview();
   resetScale();
   resetEffects();
   resetValidation();
