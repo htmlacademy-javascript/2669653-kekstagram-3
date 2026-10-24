@@ -89,11 +89,11 @@ const openBigPicture = function (photo) {
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
-const closeBigPicture = function () {
+function closeBigPicture() {
   bigPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeydown);
-};
+}
 
 
 loaderComments.addEventListener('click', () => {

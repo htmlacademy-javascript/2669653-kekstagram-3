@@ -3,7 +3,6 @@ import { openBigPicture } from './popup.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
-const photoFragment = document.createDocumentFragment();
 
 const createPicture = function (picture) {
   const photoElement = pictureTemplate.cloneNode(true);
@@ -18,18 +17,18 @@ const createPicture = function (picture) {
     openBigPicture(picture);
   });
   return photoElement;
-
 };
 
 const renderPhotos = (pictures) => {
+  picturesContainer.querySelectorAll('.picture').forEach((element) => element.remove());
+
+  const photoFragment = document.createDocumentFragment();
   pictures.forEach((picture) => {
-    const pictureElement = createPicture(picture);
-    photoFragment.append(pictureElement);
+    photoFragment.append(createPicture(picture));
   });
 
   picturesContainer.append(photoFragment);
 };
-
 
 export { renderPhotos };
 
