@@ -11,6 +11,8 @@ const timeoutDelay = 500;
 const filtersBlock = document.querySelector('.img-filters');
 const filtersForm = document.querySelector('.img-filters__form');
 
+let activeFilterId = 'filter-default';
+
 // Функция устранения дребезга.
 
 function debounce(callback) {
@@ -65,6 +67,12 @@ const initFilters = (photos) => {
       return;
     }
 
+    // Клик по уже активному фильтру: ничего не меняем и не перерисовываем
+    if (button.id === activeFilterId) {
+      return;
+    }
+
+    activeFilterId = button.id;
     setActiveButton(button);
     applyFilter(button.id);
   });
