@@ -1,12 +1,13 @@
-const hashtagsInput = document.querySelector('.text__hashtags');//поиск элемента хештега
+const MAX_HASHTAG_LENGTH = 20;
+const MAX_HASHTAGS_COUNT = 5;
+const MAX_COMMENT_LENGTH = 140;
+const hashtagsInput = document.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
 const uploadForm = document.querySelector('.img-upload__form');
 
 
-// Функция разбивает строку на отдельные хэштеги по пробелам, пустые элементы отбрасываем
 const getHashtags = (value) => value.trim().split(/\s+/).filter(Boolean);
 
-//Хэштег начинается с символа # (решётка);
 
 const hasValidCharacters = (value) =>
   getHashtags(value).every((tag) => /^#[a-zа-яё0-9]+$/i.test(tag));
@@ -24,33 +25,23 @@ const isNotOnlyHash = (value) => {
 };
 
 
-// Длина каждого хэштега, включая решётку, не больше 20 символов
-const isLengthValid = (value) => getHashtags(value).every((tag) => tag.length <= 20);
+const isLengthValid = (value) => getHashtags(value).every((tag) => tag.length <= MAX_HASHTAG_LENGTH);
 
 
-//Нельзя указать больше пяти хэштегов
-
-const isCountValid = (value) => getHashtags(value).length <= 5;
+const isCountValid = (value) => getHashtags(value).length <= MAX_HASHTAGS_COUNT;
 
 
-// Без повторов, регистр не учитываем (#ХэшТег и #хэштег одинаковы)
 const isUnique = (value) => {
   const tags = getHashtags(value).map((tag) => tag.toLowerCase());
   return new Set(tags).size === tags.length;
 };
 
 
-//  Комментарий не длиннее 140 символов
+const isCommentValid = (value) => value.length <= MAX_COMMENT_LENGTH;
 
-
-const isCommentValid = (value) => value.length <= 140;
-
-
-//Если фокус находится в поле ввода хэштега, нажатие на Esc не должно приводить к закрытию формы редактирования изображения.
 
 const isTextFieldFocused = () => document.activeElement === hashtagsInput || document.activeElement === commentInput;
 
-// Pristine
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -67,15 +58,11 @@ pristine.addValidator(hashtagsInput, isCountValid, 'Нельзя указать 
 pristine.addValidator(hashtagsInput, isUnique, 'Один и тот же хэштег нельзя использовать дважды');
 pristine.addValidator(commentInput, isCommentValid, 'Комментарий не может быть длиннее 140 символов');
 
-uploadForm.addEventListener('submit', (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }
-});
+const validateForm = () => pristine.validate();
 
-// Убирает ошибки валидации; вызывается из forms.js при сбросе формы
+
 const resetValidation = () => {
   pristine.reset();
 };
 
-export { isTextFieldFocused, resetValidation };
+export { isTextFieldFocused, resetValidation, validateForm };

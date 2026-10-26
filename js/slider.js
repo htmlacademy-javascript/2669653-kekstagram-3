@@ -1,12 +1,3 @@
-const previewImg = document.querySelector('.img-upload__preview img');
-const effectLevelBlock = document.querySelector('.img-upload__effect-level'); // Контейнер слайдера, скрыт для «Оригинала»
-const effectsList = document.querySelector('.img-upload__effects'); // блок с эффектами
-const effectSlider = document.querySelector('.effect-level__slider');
-const effectLevelValue = document.querySelector('.effect-level__value');
-
-let currentEffect = 'none';// эффект по умолчанию
-
-// Слайдер (эффекты как данные)
 
 const EFFECTS = {
   chrome: {
@@ -51,7 +42,14 @@ const EFFECTS = {
   },
 };
 
-//Создаём слайдер
+const previewImg = document.querySelector('.img-upload__preview img');
+const effectLevelBlock = document.querySelector('.img-upload__effect-level');
+const effectsList = document.querySelector('.img-upload__effects');
+const effectSlider = document.querySelector('.effect-level__slider');
+const effectLevelValue = document.querySelector('.effect-level__value');
+
+let currentEffect = 'none';
+
 
 noUiSlider.create(effectSlider, {
   range: {
@@ -63,7 +61,6 @@ noUiSlider.create(effectSlider, {
   connect: 'lower',
 });
 
-//Применение эффекта
 
 const applyEffect = (value) => {
   const settings = EFFECTS[currentEffect];
@@ -81,12 +78,11 @@ const applyEffect = (value) => {
   effectLevelValue.value = number;
 };
 
-// Обработчик движения ползунка
+
 effectSlider.noUiSlider.on('update', (values) => {
   applyEffect(parseFloat(values[0]));
 });
 
-// Обработчик выбора эффекта
 
 const onEffectChange = (evt) => {
   if (!evt.target.matches('input[name="effect"]')) {
@@ -115,7 +111,6 @@ const onEffectChange = (evt) => {
 
 effectsList.addEventListener('change', onEffectChange);
 
-// Сброс эффектов при открытии формы
 
 const resetEffects = () => {
   currentEffect = 'none';

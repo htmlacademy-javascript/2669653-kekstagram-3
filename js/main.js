@@ -6,7 +6,7 @@ import './form.js';
 
 
 getPhotos()
-  //  массив фотографий уходит в отрисовку и в фильтры
+
   .then((photos) => {
     renderPhotos(photos);
     initFilters(photos);

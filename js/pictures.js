@@ -1,4 +1,4 @@
-// Модуль отрисовки фото
+
 import { openBigPicture } from './popup.js';
 
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');

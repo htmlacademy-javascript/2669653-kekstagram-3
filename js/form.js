@@ -1,27 +1,26 @@
 import { resetScale } from './scale.js';
 import { resetEffects } from './slider.js';
-import { isTextFieldFocused, resetValidation } from './validation.js';
+import { isTextFieldFocused, resetValidation, validateForm } from './validation.js';
 import { sendPhoto } from './server.js';
 import { showSuccess, showSubmitError, isMessageShown } from './messages.js';
 
-// Поиск элементов и объявление переменных
 
 const DEFAULT_PREVIEW_SRC = 'img/upload-default-image.jpg';
-const uploadInput = document.querySelector('.img-upload__input'); //выбор файла,  change открывает форму
+const uploadInput = document.querySelector('.img-upload__input');
 const uploadOverlay = document.querySelector('.img-upload__overlay');
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadCancelButton = document.querySelector('.img-upload__cancel');
 const uploadSubmitButton = document.querySelector('.img-upload__submit');
-const uploadPreviewImage = document.querySelector('.img-upload__preview img');// находим превью
+const uploadPreviewImage = document.querySelector('.img-upload__preview img');
 const effectPreviews = document.querySelectorAll('.effects__preview');
 
 let previewUrl = null;
 
-// Функция открытия формы
 
 const openUploadForm = () => {
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const showPreview = (file) => {
@@ -36,7 +35,7 @@ const showPreview = (file) => {
   });
 };
 
-//  возвращаем превью к изображению по умолчанию
+
 const resetPreview = () => {
   if (previewUrl) {
     URL.revokeObjectURL(previewUrl);
@@ -49,12 +48,10 @@ const resetPreview = () => {
 };
 
 
-//Обработчик выбора файла
-
 uploadInput.addEventListener('change', () => {
   const file = uploadInput.files[0];
 
-  // Файла нет или это не картинка: форму не открываем
+
   if (!file || !file.type.startsWith('image/')) {
     uploadInput.value = '';
     return;
@@ -63,27 +60,23 @@ uploadInput.addEventListener('change', () => {
   openUploadForm();
 });
 
-// Закрытие формы (1.3 ТЗ)
 
 const closeUploadForm = () => {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
   uploadForm.reset();
   uploadInput.value = '';
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
-// Кнопка «Закрыть»
+
 uploadCancelButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   closeUploadForm();
 });
 
-document.addEventListener('keydown', (evt) => {
+function onDocumentKeydown(evt) {
   if (evt.key !== 'Escape') {
-    return;
-  }
-
-  if (uploadOverlay.classList.contains('hidden')) {
     return;
   }
 
@@ -96,9 +89,9 @@ document.addEventListener('keydown', (evt) => {
   }
 
   closeUploadForm();
-});
+}
 
-// Сброс формы: все три части возвращаются в исходное состояние
+
 uploadForm.addEventListener('reset', () => {
   resetPreview();
   resetScale();
@@ -106,7 +99,6 @@ uploadForm.addEventListener('reset', () => {
   resetValidation();
 });
 
-//Блокировка кнопки на время запроса
 
 const blockSubmitButton = () => {
   uploadSubmitButton.disabled = true;
@@ -116,10 +108,13 @@ const unblockSubmitButton = () => {
   uploadSubmitButton.disabled = false;
 };
 
-///  Отправка формы
+
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-
+  if (!validateForm()) {
+    showSubmitError();
+    return;
+  }
   const formData = new FormData(uploadForm);
 
   blockSubmitButton();

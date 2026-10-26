@@ -1,8 +1,5 @@
-// Модуль взаимодействия с удалённым сервером
-
 const SERVER_URL = 'https://32.javascript.htmlacademy.pro/kekstagram';
 
-// Получение данных с сервера
 const getPhotos = () =>
   fetch(`${SERVER_URL}/data`)
     .then((response) => {
@@ -13,7 +10,7 @@ const getPhotos = () =>
       return response.json();
     });
 
-// Отправка данных на сервер
+
 const sendPhoto = (formData) =>
   fetch(SERVER_URL, {
     method: 'POST',
