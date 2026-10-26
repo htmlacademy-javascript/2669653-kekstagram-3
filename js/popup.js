@@ -54,7 +54,7 @@ const showNextComments = () => {
 
 
 // Функция Заполняет окно данными конкретной фотографии
-const fillBigPicture = function (photo) {
+const fillBigPicture = (photo) => {
   bigPictureImg.src = photo.url;
   bigPictureImg.alt = photo.description;
   likesCount.textContent = photo.likes;

@@ -4,7 +4,7 @@ import { openBigPicture } from './popup.js';
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 
-const createPicture = function (picture) {
+const createPicture = (picture) => {
   const photoElement = pictureTemplate.cloneNode(true);
   const imageElement = photoElement.querySelector('.picture__img');
   imageElement.src = picture.url;
@@ -18,6 +18,7 @@ const createPicture = function (picture) {
   });
   return photoElement;
 };
+
 
 const renderPhotos = (pictures) => {
   picturesContainer.querySelectorAll('.picture').forEach((element) => element.remove());
