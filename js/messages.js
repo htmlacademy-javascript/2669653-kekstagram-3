@@ -32,7 +32,7 @@ const showMessage = (templateId, blockClass, closeButtonClass) => {
 
   document.addEventListener('keydown', onEscKeydown);
 
-  //По клику на произвольную область экрана за пределами блока с сообщением.
+
   const onOutsideClick = (evt) => {
     if (!evt.target.closest(`.${blockClass}__inner`)) {
       closeMessage();

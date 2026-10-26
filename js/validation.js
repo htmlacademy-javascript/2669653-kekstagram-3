@@ -12,7 +12,6 @@ const getHashtags = (value) => value.trim().split(/\s+/).filter(Boolean);
 const hasValidCharacters = (value) =>
   getHashtags(value).every((tag) => /^#[a-zа-яё0-9]+$/i.test(tag));
 
-//хэштег не может состоять только из решётки
 
 const isNotOnlyHash = (value) => {
   const tags = getHashtags(value);
